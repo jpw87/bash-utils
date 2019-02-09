@@ -39,18 +39,14 @@ echo "File size set to ${file_size} bytes"
 count=0
 while [ $count -lt $file_count ]; do
 
-	# Datetime, ex: 20190201_172628234796411
-        datetime=$(date +"%Y%m%d_%H%M%S%N")
+        datetime=$(date +"%Y%m%d_%H%M%S")
 
 	# File name, ex: GEN_FILE_10M_20190201_172702790450480
-        file_name="GEN_FILE_${file_size}_${datetime}"
+        file_name="GEN_FILE_${count}_${file_size}_${datetime}"
 
 	# Generate the file with random data
         head -c ${file_size} </dev/urandom >${file_name}
 	echo "Generated file ${file_name}"
-
-	# Sleep so we don't go sanic fast and name files the same thing
-	sleep 0.05
 
 	#Increment
         count=$((count + 1))
