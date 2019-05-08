@@ -3,13 +3,29 @@
 
 echo "Running random file generator"
 
-display_help()
-{
+display_help () {
 	echo -e "\n---Random file generator---"
 	echo "  Usage:"
 	echo "    [script_name] [num files] [file size]"
 	echo "    Example run that creates 3 files at 45000 bytes each:"
 	echo "    ./filegen 3 45000"
+}
+
+generate_file () {
+	# Get vars
+	count=$1
+	file_size=$2
+	datetime=$3
+
+	# Get datetime
+	datetime=$(date +"%Y%m%d_%H%M%S")
+
+	# Build file name
+	file_name="GEN_FILE_${count}_${file_size}_${datetime}"
+
+	# Generate the file with random data
+	head -c ${file_size} </dev/urandom >${file_name}
+	echo "Generated file ${file_name}"
 }
 
 # Get the file count; default=1
@@ -39,16 +55,10 @@ echo "File size set to ${file_size} bytes"
 count=0
 while [ $count -lt $file_count ]; do
 
-        datetime=$(date +"%Y%m%d_%H%M%S")
+	# Use the generate file function async
+	generate_file $count $file_size $datetime &
 
-	# File name, ex: GEN_FILE_10M_20190201_172702790450480
-        file_name="GEN_FILE_${count}_${file_size}_${datetime}"
-
-	# Generate the file with random data
-        head -c ${file_size} </dev/urandom >${file_name}
-	echo "Generated file ${file_name}"
-
-	#Increment
+	# Increment our count used to track while loop and in file name
         count=$((count + 1))
 done
 
