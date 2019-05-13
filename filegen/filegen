@@ -56,6 +56,8 @@ count=0
 while [ $count -lt $file_count ]; do
 
 	# Use the generate file function async
+	# TODO need to kill these processes if we abort execution of the script
+	# if you kill TERM/KILL this script the child processes keep creating random data in the background
 	generate_file $count $file_size $datetime &
 
         # Add pid of backgrounded process to children list
