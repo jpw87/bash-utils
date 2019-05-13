@@ -58,7 +58,21 @@ while [ $count -lt $file_count ]; do
 	# Use the generate file function async
 	generate_file $count $file_size $datetime &
 
+        # Add pid of backgrounded process to children list
+	# This string will hold the children pids space delimited list
+	# Arrays in bash would prefereable but currently writing this to work in ash
+        # TODO is there a more efficient string concat?
+        children="$children $!"
+
 	# Increment our count used to track while loop and in file name
         count=$((count + 1))
 done
+
+# Wait for background processes to finish up
+for pid in $children
+do
+        wait $pid
+done
+
+exit 0
 
